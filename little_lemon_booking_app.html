@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Little Lemon – Table Booking</title>
+<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;500;700&family=Karla:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lemon:#F4CE14;
+  --lemon-dark:#E9B400;
+  --green:#495E57;
+  --green-light:#617A71;
+  --orange:#EE9972;
+  --cream:#FEFCF0;
+  --peach:#FBDABB;
+  --dark:#333333;
+  --gray:#767676;
+  --light:#F5F5F5;
+  --white:#FFFFFF;
+  --error:#D14B4B;
+  --success:#2D6A4F;
+  --radius:8px;
+  --radius-lg:16px;
+}
+body{font-family:'Karla',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+h1,h2,h3,h4{font-family:'Markazi Text',serif}
+
+/* NAV */
+nav{background:var(--white);padding:0 2rem;height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--lemon);position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{width:44px;height:44px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+.nav-brand{font-family:'Markazi Text',serif;font-size:26px;font-weight:700;color:var(--green);line-height:1}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{text-decoration:none;color:var(--dark);font-weight:500;font-size:15px;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+
+/* HERO */
+.hero{background:var(--green);padding:3rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;background:rgba(244,206,20,.1)}
+.hero-text h1{font-family:'Markazi Text',serif;font-size:58px;color:var(--lemon);line-height:1;margin-bottom:.25rem}
+.hero-text h2{font-family:'Markazi Text',serif;font-size:32px;color:var(--white);margin-bottom:1rem}
+.hero-text p{color:rgba(255,255,255,.85);font-size:16px;max-width:380px;line-height:1.6;margin-bottom:1.5rem}
+.hero-cta{background:var(--lemon);color:var(--dark);font-family:'Karla',sans-serif;font-weight:700;font-size:16px;padding:.75rem 2rem;border:none;border-radius:var(--radius);cursor:pointer;transition:background .2s,transform .1s;text-decoration:none;display:inline-block}
+.hero-cta:hover{background:var(--lemon-dark)}
+.hero-cta:active{transform:scale(.98)}
+.hero-img{width:320px;height:240px;border-radius:var(--radius-lg);object-fit:cover;background:var(--green-light);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:80px;border:3px solid rgba(255,255,255,.2)}
+
+/* BOOKING SECTION */
+.booking-section{max-width:700px;margin:0 auto;padding:3rem 2rem}
+.section-title{font-family:'Markazi Text',serif;font-size:40px;color:var(--green);margin-bottom:.25rem}
+.section-sub{color:var(--gray);font-size:15px;margin-bottom:2rem}
+
+/* FORM */
+.booking-card{background:var(--white);border-radius:var(--radius-lg);border:1.5px solid #E8E5D0;padding:2.5rem;box-shadow:0 4px 24px rgba(73,94,87,.08)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.form-group{display:flex;flex-direction:column;gap:.5rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:14px;font-weight:700;color:var(--dark);letter-spacing:.02em}
+label .required{color:var(--error);margin-left:2px}
+input,select,textarea{font-family:'Karla',sans-serif;font-size:15px;padding:.65rem .9rem;border:1.5px solid #D0CDB8;border-radius:var(--radius);color:var(--dark);background:var(--white);transition:border-color .2s,box-shadow .2s;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(73,94,87,.12)}
+input.error,select.error{border-color:var(--error)}
+input:disabled,select:disabled{background:var(--light);cursor:not-allowed;opacity:.7}
+.error-msg{font-size:12px;color:var(--error);margin-top:2px;min-height:16px}
+.time-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
+.time-btn{padding:.45rem .9rem;border:1.5px solid #D0CDB8;border-radius:var(--radius);background:var(--white);font-family:'Karla',sans-serif;font-size:14px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .15s}
+.time-btn:hover{border-color:var(--green);background:rgba(73,94,87,.06)}
+.time-btn.selected{background:var(--green);border-color:var(--green);color:var(--white)}
+.time-btn:disabled{opacity:.4;cursor:not-allowed;background:var(--light)}
+.occasion-btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
+.occ-btn{padding:.45rem 1rem;border:1.5px solid #D0CDB8;border-radius:20px;background:var(--white);font-family:'Karla',sans-serif;font-size:13px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .15s}
+.occ-btn:hover{border-color:var(--green)}
+.occ-btn.selected{background:var(--lemon);border-color:var(--lemon-dark);color:var(--dark)}
+.seating-btns{display:flex;gap:.75rem;margin-top:.25rem}
+.seat-btn{flex:1;padding:.7rem;border:1.5px solid #D0CDB8;border-radius:var(--radius);background:var(--white);font-family:'Karla',sans-serif;font-size:14px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .15s;text-align:center}
+.seat-btn:hover{border-color:var(--green)}
+.seat-btn.selected{background:var(--green);border-color:var(--green);color:var(--white)}
+.seat-btn .seat-icon{display:block;font-size:22px;margin-bottom:4px}
+.divider{grid-column:1/-1;border:none;border-top:1px dashed #D0CDB8;margin:.25rem 0}
+.guest-counter{display:flex;align-items:center;gap:1rem;margin-top:.25rem}
+.counter-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid #D0CDB8;background:var(--white);font-size:20px;font-weight:700;color:var(--green);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.counter-btn:hover:not(:disabled){border-color:var(--green);background:rgba(73,94,87,.08)}
+.counter-btn:disabled{opacity:.35;cursor:not-allowed}
+.counter-val{font-size:22px;font-weight:700;color:var(--dark);min-width:28px;text-align:center}
+.counter-label{font-size:13px;color:var(--gray)}
+.submit-btn{grid-column:1/-1;background:var(--lemon);color:var(--dark);font-family:'Karla',sans-serif;font-weight:700;font-size:17px;padding:1rem;border:none;border-radius:var(--radius);cursor:pointer;transition:background .2s,transform .1s;margin-top:.5rem;letter-spacing:.01em}
+.submit-btn:hover:not(:disabled){background:var(--lemon-dark)}
+.submit-btn:active:not(:disabled){transform:scale(.99)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* SUCCESS */
+.success-card{background:var(--white);border-radius:var(--radius-lg);border:1.5px solid #E8E5D0;padding:3rem 2.5rem;text-align:center;box-shadow:0 4px 24px rgba(73,94,87,.08)}
+.success-icon{width:72px;height:72px;background:#E8F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:36px}
+.success-card h2{font-family:'Markazi Text',serif;font-size:36px;color:var(--green);margin-bottom:.5rem}
+.success-card p{color:var(--gray);font-size:15px;margin-bottom:.5rem;line-height:1.6}
+.booking-ref{background:var(--lemon);padding:.4rem 1.2rem;border-radius:var(--radius);display:inline-block;font-weight:700;font-size:18px;margin:1rem 0 1.5rem;color:var(--dark);letter-spacing:.05em}
+.summary-table{width:100%;text-align:left;margin:1rem 0;border-collapse:collapse}
+.summary-table td{padding:.4rem .5rem;font-size:14px}
+.summary-table td:first-child{color:var(--gray);font-weight:600;width:45%}
+.new-booking-btn{background:var(--green);color:var(--white);font-family:'Karla',sans-serif;font-weight:700;font-size:15px;padding:.75rem 2rem;border:none;border-radius:var(--radius);cursor:pointer;margin-top:.5rem;transition:background .2s}
+.new-booking-btn:hover{background:var(--green-light)}
+
+/* SPECIALS */
+.specials{background:var(--white);padding:3rem 2rem}
+.specials-inner{max-width:900px;margin:0 auto}
+.specials-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.specials-header h2{font-family:'Markazi Text',serif;font-size:40px;color:var(--green)}
+.specials-header a{color:var(--dark);font-weight:700;text-decoration:none;font-size:15px}
+.specials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.dish-card{border-radius:var(--radius);border:1px solid #EAE8D8;overflow:hidden}
+.dish-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:56px;background:linear-gradient(135deg,var(--peach),var(--orange))}
+.dish-body{padding:1rem}
+.dish-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.dish-name{font-weight:700;font-size:15px}
+.dish-price{color:var(--orange);font-weight:700;font-size:15px}
+.dish-desc{font-size:13px;color:var(--gray);line-height:1.5;margin-bottom:.75rem}
+.dish-order{font-size:13px;font-weight:700;color:var(--dark);text-decoration:none;display:flex;align-items:center;gap:4px}
+
+/* FOOTER */
+footer{background:var(--green);color:rgba(255,255,255,.85);padding:2.5rem 2rem;margin-top:2rem}
+.footer-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.footer-brand h3{font-family:'Markazi Text',serif;font-size:28px;color:var(--lemon);margin-bottom:.4rem}
+.footer-brand p{font-size:13px;opacity:.7;line-height:1.5}
+footer h4{font-size:13px;font-weight:700;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--lemon)}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+footer ul li a{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;transition:color .2s}
+footer ul li a:hover{color:var(--lemon)}
+.footer-bottom{max-width:900px;margin:.75rem auto 0;border-top:1px solid rgba(255,255,255,.15);padding-top:.75rem;font-size:12px;opacity:.5;text-align:center}
+
+/* RESPONSIVE */
+@media(max-width:620px){
+  .hero{flex-direction:column}
+  .hero-img{width:100%;max-width:100%}
+  .hero-text h1{font-size:44px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+  .submit-btn{grid-column:1}
+  .specials-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav aria-label="Main navigation">
+  <a href="#" class="nav-logo" aria-label="Little Lemon home">
+    <div class="nav-logo-icon" aria-hidden="true">🍋</div>
+    <span class="nav-brand">Little Lemon</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#">Home</a>
+    <a href="#booking">Reservations</a>
+    <a href="#specials">Menu</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+</nav>
+
+<header class="hero" role="banner">
+  <div class="hero-text">
+    <h1>Little Lemon</h1>
+    <h2>Chicago</h2>
+    <p>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</p>
+    <a href="#booking" class="hero-cta">Reserve a Table</a>
+  </div>
+  <div class="hero-img" role="img" aria-label="Delicious Mediterranean food">🥗</div>
+</header>
+
+<main>
+  <section id="booking" class="booking-section" aria-labelledby="booking-title">
+    <h2 class="section-title" id="booking-title">Reserve a Table</h2>
+    <p class="section-sub">Book your table online — it only takes a minute.</p>
+
+    <div id="form-container">
+      <div class="booking-card" role="region" aria-label="Table booking form">
+        <form id="bookingForm" novalidate aria-label="Reservation form">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="firstName">First name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="firstName" name="firstName" placeholder="e.g. Jane" autocomplete="given-name" aria-required="true" aria-describedby="firstName-err"/>
+              <span class="error-msg" id="firstName-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Last name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="lastName" name="lastName" placeholder="e.g. Smith" autocomplete="family-name" aria-required="true" aria-describedby="lastName-err"/>
+              <span class="error-msg" id="lastName-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email address <span class="required" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" placeholder="jane@example.com" autocomplete="email" aria-required="true" aria-describedby="email-err"/>
+              <span class="error-msg" id="email-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000" autocomplete="tel" aria-describedby="phone-err"/>
+              <span class="error-msg" id="phone-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <hr class="divider" aria-hidden="true"/>
+
+            <div class="form-group">
+              <label for="date">Date <span class="required" aria-hidden="true">*</span></label>
+              <input type="date" id="date" name="date" aria-required="true" aria-describedby="date-err"/>
+              <span class="error-msg" id="date-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group">
+              <label>Guests</label>
+              <div class="guest-counter" role="group" aria-label="Number of guests">
+                <button type="button" class="counter-btn" id="decGuests" aria-label="Decrease guests">−</button>
+                <span class="counter-val" id="guestCount" aria-live="polite" aria-atomic="true">2</span>
+                <button type="button" class="counter-btn" id="incGuests" aria-label="Increase guests">+</button>
+                <span class="counter-label" aria-hidden="true">guests (max 10)</span>
+              </div>
+              <input type="hidden" id="guests" name="guests" value="2"/>
+            </div>
+
+            <div class="form-group full">
+              <label>Available times <span class="required" aria-hidden="true">*</span></label>
+              <div class="time-grid" id="timeGrid" role="radiogroup" aria-required="true" aria-describedby="time-err" aria-label="Select a time slot"></div>
+              <span class="error-msg" id="time-err" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group full">
+              <label>Seating preference</label>
+              <div class="seating-btns" role="group" aria-label="Seating preference">
+                <button type="button" class="seat-btn selected" data-val="indoor" aria-pressed="true">
+                  <span class="seat-icon" aria-hidden="true">🪑</span>Indoor
+                </button>
+                <button type="button" class="seat-btn" data-val="outdoor" aria-pressed="false">
+                  <span class="seat-icon" aria-hidden="true">🌿</span>Outdoor
+                </button>
+                <button type="button" class="seat-btn" data-val="bar" aria-pressed="false">
+                  <span class="seat-icon" aria-hidden="true">🍸</span>Bar seating
+                </button>
+              </div>
+              <input type="hidden" id="seating" name="seating" value="indoor"/>
+            </div>
+
+            <div class="form-group full">
+              <label>Occasion <span style="font-weight:400;color:var(--gray)">(optional)</span></label>
+              <div class="occasion-btns" role="group" aria-label="Occasion type">
+                <button type="button" class="occ-btn" data-val="birthday" aria-pressed="false">🎂 Birthday</button>
+                <button type="button" class="occ-btn" data-val="anniversary" aria-pressed="false">💍 Anniversary</button>
+                <button type="button" class="occ-btn" data-val="business" aria-pressed="false">💼 Business meal</button>
+                <button type="button" class="occ-btn" data-val="date" aria-pressed="false">❤️ Date night</button>
+                <button type="button" class="occ-btn" data-val="other" aria-pressed="false">✨ Other</button>
+              </div>
+              <input type="hidden" id="occasion" name="occasion" value=""/>
+            </div>
+
+            <div class="form-group full">
+              <label for="requests">Special requests</label>
+              <textarea id="requests" name="requests" rows="3" placeholder="Allergies, accessibility needs, high chair, etc." maxlength="300" aria-describedby="requests-hint"></textarea>
+              <span id="requests-hint" style="font-size:12px;color:var(--gray)">Up to 300 characters</span>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" aria-label="Confirm table reservation">
+              Confirm Reservation
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="specials" class="specials" aria-labelledby="specials-title">
+    <div class="specials-inner">
+      <div class="specials-header">
+        <h2 id="specials-title">This week's specials</h2>
+        <a href="#" aria-label="View full online menu">Online Menu →</a>
+      </div>
+      <div class="specials-grid">
+        <article class="dish-card">
+          <div class="dish-img" aria-label="Greek salad image">🥗</div>
+          <div class="dish-body">
+            <div class="dish-meta">
+              <span class="dish-name">Greek salad</span>
+              <span class="dish-price">$12.99</span>
+            </div>
+            <p class="dish-desc">The famous Greek salad of crispy lettuce, peppers, olives and our Chicago-style feta cheese.</p>
+            <a href="#" class="dish-order">Order a delivery <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="dish-card">
+          <div class="dish-img" aria-label="Bruschetta image" style="background:linear-gradient(135deg,#FDE8CB,#F4A261)">🍞</div>
+          <div class="dish-body">
+            <div class="dish-meta">
+              <span class="dish-name">Bruschetta</span>
+              <span class="dish-price">$5.99</span>
+            </div>
+            <p class="dish-desc">Our bruschetta is made from grilled bread that has been smeared with garlic and seasoned with salt and olive oil.</p>
+            <a href="#" class="dish-order">Order a delivery <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+        <article class="dish-card">
+          <div class="dish-img" aria-label="Lemon dessert image" style="background:linear-gradient(135deg,#FEF9C3,#F4CE14)">🍋</div>
+          <div class="dish-body">
+            <div class="dish-meta">
+              <span class="dish-name">Lemon dessert</span>
+              <span class="dish-price">$6.99</span>
+            </div>
+            <p class="dish-desc">This comes straight from grandma's recipe book — every bite is a refreshing, zingy delight.</p>
+            <a href="#" class="dish-order">Order a delivery <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>🍋 Little Lemon</h3>
+      <p>A family owned Mediterranean restaurant in Chicago, Illinois. Open since 1995.</p>
+    </div>
+    <div>
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#booking">Reservations</a></li>
+        <li><a href="#specials">Menu</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+13125550187">+1 (312) 555-0187</a></li>
+        <li><a href="mailto:hello@littlelemon.com">hello@littlelemon.com</a></li>
+        <li><a href="#">123 W Madison St, Chicago, IL</a></li>
+        <li><a href="#">Mon–Sun: 11am – 11pm</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Little Lemon Restaurant. All rights reserved.</div>
+</footer>
+
+<script>
+// ── Utilities ──
+function $(id){return document.getElementById(id)}
+function setError(field,msg){
+  const inp=$(`${field}`);const err=$(`${field}-err`);
+  if(inp){inp.classList.toggle('error',!!msg)}
+  if(err){err.textContent=msg||''}
+}
+function clearErrors(){
+  ['firstName','lastName','email','phone','date','time'].forEach(f=>setError(f,''));
+}
+
+// ── Date setup ──
+const dateInput=$('date');
+const today=new Date();
+const pad=n=>String(n).padStart(2,'0');
+const todayStr=`${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+const maxDate=new Date(today);maxDate.setMonth(maxDate.getMonth()+3);
+const maxStr=`${maxDate.getFullYear()}-${pad(maxDate.getMonth()+1)}-${pad(maxDate.getDate())}`;
+dateInput.min=todayStr;
+dateInput.max=maxStr;
+dateInput.value=todayStr;
+
+// ── Time slots ──
+const ALL_TIMES=['17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30'];
+const BUSY_SEED={1:[0,3,7],2:[1,4,6],3:[2,5,8],4:[0,2,9],5:[1,3,5,7],6:[0,2,4,6,8],0:[1,5,9]};
+let selectedTime='';
+
+function getAvailableTimes(dateStr){
+  const d=new Date(dateStr);const dow=d.getDay();
+  const busy=BUSY_SEED[dow]||[];
+  return ALL_TIMES.map((t,i)=>({time:t,available:!busy.includes(i)}));
+}
+
+function renderTimes(dateStr){
+  const grid=$('timeGrid');
+  const slots=getAvailableTimes(dateStr);
+  grid.innerHTML='';
+  selectedTime='';
+  slots.forEach(({time,available})=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='time-btn'+(time===selectedTime?' selected':'');
+    btn.textContent=formatTime(time);
+    btn.disabled=!available;
+    btn.setAttribute('role','radio');
+    btn.setAttribute('aria-checked','false');
+    btn.setAttribute('aria-disabled',String(!available));
+    if(!available)btn.setAttribute('aria-label',`${formatTime(time)} – fully booked`);
+    btn.addEventListener('click',()=>{
+      if(!available)return;
+      selectedTime=time;
+      setError('time','');
+      grid.querySelectorAll('.time-btn').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-checked','false')});
+      btn.classList.add('selected');
+      btn.setAttribute('aria-checked','true');
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function formatTime(t){
+  const [h,m]=t.split(':').map(Number);
+  const ampm=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+dateInput.addEventListener('change',()=>renderTimes(dateInput.value));
+renderTimes(todayStr);
+
+// ── Guest counter ──
+let guests=2;
+function updateGuests(n){
+  guests=Math.max(1,Math.min(10,n));
+  $('guestCount').textContent=guests;
+  $('guests').value=guests;
+  $('decGuests').disabled=guests<=1;
+  $('incGuests').disabled=guests>=10;
+}
+$('decGuests').addEventListener('click',()=>updateGuests(guests-1));
+$('incGuests').addEventListener('click',()=>updateGuests(guests+1));
+updateGuests(2);
+
+// ── Seating ──
+document.querySelectorAll('.seat-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.seat-btn').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false')});
+    btn.classList.add('selected');btn.setAttribute('aria-pressed','true');
+    $('seating').value=btn.dataset.val;
+  });
+});
+
+// ── Occasion ──
+document.querySelectorAll('.occ-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const wasSelected=btn.classList.contains('selected');
+    document.querySelectorAll('.occ-btn').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false')});
+    if(!wasSelected){btn.classList.add('selected');btn.setAttribute('aria-pressed','true');$('occasion').value=btn.dataset.val;}
+    else{$('occasion').value='';}
+  });
+});
+
+// ── Validation ──
+function validate(){
+  clearErrors();let valid=true;
+  const fn=$('firstName').value.trim();
+  const ln=$('lastName').value.trim();
+  const em=$('email').value.trim();
+  const ph=$('phone').value.trim();
+  const dt=$('date').value;
+  if(!fn){setError('firstName','Please enter your first name.');valid=false;}
+  else if(fn.length<2){setError('firstName','Name must be at least 2 characters.');valid=false;}
+  if(!ln){setError('lastName','Please enter your last name.');valid=false;}
+  else if(ln.length<2){setError('lastName','Name must be at least 2 characters.');valid=false;}
+  if(!em){setError('email','Please enter your email address.');valid=false;}
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){setError('email','Please enter a valid email address.');valid=false;}
+  if(ph&&!/^[\d\s\+\-\(\)]{7,20}$/.test(ph)){setError('phone','Please enter a valid phone number.');valid=false;}
+  if(!dt){setError('date','Please select a date.');valid=false;}
+  else if(dt<todayStr){setError('date','Date cannot be in the past.');valid=false;}
+  else if(dt>maxStr){setError('date','Date must be within the next 3 months.');valid=false;}
+  if(!selectedTime){setError('time','Please select an available time slot.');valid=false;}
+  return valid;
+}
+
+// ── Submission ──
+function generateRef(){return 'LL-'+Math.random().toString(36).substr(2,6).toUpperCase();}
+
+$('bookingForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!validate())return;
+  const data={
+    name:$('firstName').value.trim()+' '+$('lastName').value.trim(),
+    email:$('email').value.trim(),
+    phone:$('phone').value.trim()||'Not provided',
+    date:new Date($('date').value).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
+    time:formatTime(selectedTime),
+    guests:guests,
+    seating:$('seating').value,
+    occasion:$('occasion').value||'None',
+    requests:$('requests').value.trim()||'None',
+    ref:generateRef()
+  };
+  showSuccess(data);
+});
+
+function showSuccess(d){
+  const container=$('form-container');
+  const occ=d.occasion!=='None'?`<tr><td>Occasion</td><td>${d.occasion.charAt(0).toUpperCase()+d.occasion.slice(1)}</td></tr>`:'';
+  const req=d.requests!=='None'?`<tr><td>Requests</td><td>${d.requests}</td></tr>`:'';
+  container.innerHTML=`
+  <div class="success-card" role="status" aria-live="polite" aria-label="Booking confirmed">
+    <div class="success-icon" aria-hidden="true">✅</div>
+    <h2>Booking confirmed!</h2>
+    <p>Thank you, <strong>${d.name}</strong>. We're looking forward to hosting you at Little Lemon.</p>
+    <p>A confirmation has been sent to <strong>${d.email}</strong>.</p>
+    <div class="booking-ref" aria-label="Booking reference number">${d.ref}</div>
+    <table class="summary-table" aria-label="Booking summary">
+      <tr><td>Date</td><td>${d.date}</td></tr>
+      <tr><td>Time</td><td>${d.time}</td></tr>
+      <tr><td>Guests</td><td>${d.guests} ${d.guests===1?'guest':'guests'}</td></tr>
+      <tr><td>Seating</td><td>${d.seating.charAt(0).toUpperCase()+d.seating.slice(1)}</td></tr>
+      ${occ}${req}
+    </table>
+    <p style="font-size:13px;color:var(--gray)">Need to cancel or modify? Call us at <a href="tel:+13125550187">+1 (312) 555-0187</a></p>
+    <button class="new-booking-btn" onclick="location.reload()" aria-label="Make a new reservation">Make another reservation</button>
+  </div>`;
+  container.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
